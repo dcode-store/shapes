@@ -1,0 +1,43 @@
+# This workflow will build and push a Docker container to cloud when a commit is pushed to your default branch.
+
+name: Build and deploy a container to digital ocean
+
+on:
+  push:
+    branches: [ "release" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: environment-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push container image to registry
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mt-web:latest
+          file: ./Dockerfile.prod
+          build-args: |
+            REACT_APP_ENV=production
+            REACT_APP_BASE_URL=https://example.com
+            REACT_APP_BACKEND_URL=https://example.com/api
+

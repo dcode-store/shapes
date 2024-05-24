@@ -1,0 +1,30 @@
+name: Lints the project
+
+on:
+    push:
+        branches:
+            - main
+            - develop
+    pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: '6.32.9'
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm ci --prefer-offline
+      - name: Alex
+        run: pnpm run alex
+      - name: Prettier
+        run: pnpm run prettier -- --list-different
+      - name: Eslint
+        run: pnpm run eslint -- --max-warnings 0
+    

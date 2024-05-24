@@ -1,0 +1,57 @@
+/* .sidebar {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background: #f0f0f0;
+    border-right: 1px solid #eee;
+    width: 250px;
+    height: 100%;
+} */
+
+
+.react-flow__panel,
+.react-flow__node-toolbar {
+    background-color: var(--panel-background);
+    box-shadow: var(--panel-shadow);
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.sidebar .sidebar-label {
+    color: var(--text);
+    font-size: 12px;
+    margin-bottom: 4px;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.sidebar .sidebar-items {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+}
+
+.sidebar-items .sidebar-item {
+    opacity: .5;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+}
+
+.sidebar-item .sidebar-item-drag-image {
+    transform: translate(0);
+    position: absolute;
+    top: -100000px;
+    left: -1000000px;
+}
+
+.sidebar-item>svg {
+    stroke: var(--text);
+}
+
+.sidebar-item:hover {
+    opacity: 1;
+    background-color: var(--background);
+}

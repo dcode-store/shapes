@@ -1,0 +1,10 @@
+version: "3"
+name: journo-web
+
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: Dockerfile.dev
+    ports:
+      - 8080:8080
