@@ -12,7 +12,7 @@ import Spinner from '../atom/spinner';
 const actionBtnClass = "p-2 inline-flex items-center gap-x-2 -ms-px first:rounded-s-lg first:ms-0 last:rounded-e-lg text-sm font-medium focus:z-10 border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-white dark:hover:bg-gray-800 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 text-emerald-600 font-semibold"
 
 
-export const SaveRestore: React.FC<{ setNodes: any, setEdges: any, reactFlowInstance: ReactFlowInstance }> = ({ reactFlowInstance }) => {
+export const SaveRestore: React.FC<{ reactFlowInstance: ReactFlowInstance }> = ({ reactFlowInstance }) => {
     const { name } = useParams();
     const navigate = useNavigate();
     const { mutate } = useSWRConfig();

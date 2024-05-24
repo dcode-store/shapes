@@ -4,7 +4,6 @@ import { useLocation } from 'react-router-dom';
 import { Handle, Position, NodeToolbar, NodeResizer, useReactFlow } from 'reactflow';
 import { SHAPES } from '../atom/shape';
 import './shapeNode.css';
-import LinkToolbar from './linkToolbar';
 
 const AvailableColors = [
     "transparent",
@@ -19,14 +18,10 @@ const AvailableColors = [
 const ShapeNode = ({ id, data, selected, ...other }: { id: string, data: any, selected: boolean, other: any }) => {
     let initWidth = other?.size?.width || data?.size?.width || 76;
     let initHeight = other?.size?.height || data?.size?.height || 76;
-    const { pathname } = useLocation();
     const { setNodes } = useReactFlow();
     const [label, setLabel] = useState(data.label || "");
     const [size, setSize] = useState({ width: initWidth, height: initHeight });
     const [color, setColor] = useState(data?.color);
-    const [link, setLink] = useState(data.link || '');
-
-    const editmode = pathname.includes('edit') || pathname.includes('new');
 
     useEffect(() => {
         setNodes((nodes) =>
@@ -34,13 +29,12 @@ const ShapeNode = ({ id, data, selected, ...other }: { id: string, data: any, se
                 if (node.id === id) {
                     node.data.label = label;
                     node.data.color = color;
-                    node.data.link = link;
                     node.data.size = { width: node.width, height: node.height };
                 }
                 return node;
             })
         );
-    }, [label, color, link]);
+    }, [label, color]);
 
     useEffect(() => {
         setSize({ width: initWidth, height: initHeight });
@@ -59,7 +53,7 @@ const ShapeNode = ({ id, data, selected, ...other }: { id: string, data: any, se
     const Component = SHAPES[data?.type].component;
     return (
         <>
-            <NodeToolbar isVisible={selected && editmode} position={Position.Top} className='shape-toolbar'>
+            <NodeToolbar isVisible={selected} position={Position.Top} className='shape-toolbar'>
                 {AvailableColors.map((each, index) => {
                     let colorClass = (color == each) ? 'color-swatch active' : 'color-swatch';
                     if (each === 'transparent') {
@@ -68,11 +62,8 @@ const ShapeNode = ({ id, data, selected, ...other }: { id: string, data: any, se
                     return <button key={index} className={colorClass} onClick={() => changeColor(each)} style={{ backgroundColor: each }}></button>
                 })}
             </NodeToolbar>
-            <NodeToolbar isVisible={selected} position={Position.Right} className='shape-toolbar'>
-                <LinkToolbar editmode={editmode} defaultLink={data.link} setLink={setLink} />
-            </NodeToolbar >
 
-            <NodeResizer onResize={onResize} color={color} isVisible={selected && editmode} minWidth={10} minHeight={10} />
+            <NodeResizer onResize={onResize} color={color} isVisible={selected} minWidth={10} minHeight={10} />
             <Component width={size.width} height={size.height} color={color} />
             {
                 [Position.Top, Position.Left, Position.Right, Position.Bottom].map(
@@ -81,7 +72,7 @@ const ShapeNode = ({ id, data, selected, ...other }: { id: string, data: any, se
                     )
                 )
             }
-            <input type="text" className={data?.type === "subflow" ? "node-label-subflow" : 'node-label'} value={label} readOnly={!editmode} placeholder={data?.type} onChange={(e) => setLabel(e.target.value)} />
+            <input type="text" className={data?.type === "subflow" ? "node-label-subflow" : 'node-label'} value={label} placeholder={data?.type} onChange={(e) => setLabel(e.target.value)} />
         </>
     );
 }

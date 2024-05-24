@@ -302,9 +302,17 @@ const Subflow: React.FC = ({ width = 76, height = 76 }) => {
     return Rectangle({ width, height, color: 'transparent' });
 };
 
+interface ShapeType {
+    [key: string]: {
+        icon: FC<{}>;
+        component: FC<{}>;
+        color: string;
+    };
+}
+
 
 // Define SHAPES object
-const SHAPES = {
+const SHAPES: ShapeType = {
     circle: {
         icon: CircleIcon,
         component: Circle,
