@@ -76,7 +76,7 @@ const Login = () => {
                     <img
                         className="mx-auto h-32 w-auto"
                         src={logo}
-                        alt="Mechatronics"
+                        alt="Shapes"
                     />
                     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
                         Sign in to your account

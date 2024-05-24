@@ -1,6 +1,7 @@
 {
-    "name": "mechatronic-web",
+    "name": "shapes",
     "version": "0.1.0",
+    "homepage": "https://gitname.github.io/react-gh-pages",
     "private": true,
     "dependencies": {
         "@testing-library/react": "^13.4.0",
@@ -12,6 +13,7 @@
         "axios": "^1.6.7",
         "brace": "^0.11.1",
         "flatpickr": "^4.6.13",
+        "gh-pages": "^6.1.1",
         "html-to-image": "^1.11.11",
         "jsoneditor": "^10.0.2",
         "localforage": "^1.10.0",
@@ -26,13 +28,19 @@
         "web-vitals": "^2.1.4"
     },
     "scripts": {
+        "predeploy": "react-scripts build",
+        "deploy": "gh-pages -d build",
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
     },
     "browserslist": {
-        "production": [">0.2%", "not dead", "not op_mini all"],
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
         "development": [
             "last 1 chrome version",
             "last 1 firefox version",
