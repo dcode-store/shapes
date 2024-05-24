@@ -1,0 +1,55 @@
+.node-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 0.5rem;
+    background: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    color: var(--text);
+}
+
+.node-label-subflow {
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 0.5rem;
+    background: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    color: var(--text);
+}
+
+.color-swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    outline: none;
+    box-shadow: none;
+    border: 1px solid var(--panel-background);
+    cursor: pointer;
+}
+
+.color-swatch.active {
+    outline: 2px solid var(--text);
+}
+
+.color-swatch._transparent {
+    background-repeat: round;
+    background-image: url(https://img.icons8.com/?size=256&id=e2GDCqmSwVWp&format=png);
+}
+
+.shape-toolbar {
+    display: flex;
+    gap: 8px;
+    background-color: var(--panel-background);
+    box-shadow: var(--panel-shadow);
+    border-radius: 8px;
+    padding: 8px;
+}
