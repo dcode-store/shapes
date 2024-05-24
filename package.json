@@ -1,7 +1,7 @@
 {
     "name": "shapes",
     "version": "0.1.0",
-    "homepage": "https://gitname.github.io/react-gh-pages",
+    "homepage": "https://dcode-store.github.io/shapes/",
     "private": true,
     "dependencies": {
         "@testing-library/react": "^13.4.0",
