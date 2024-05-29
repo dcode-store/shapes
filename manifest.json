@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Shapes",
+  "name": "Shapes | Create and Save Custom Charts with dcode-store",
   "icons": [
     {
       "src": "favicon.ico",
