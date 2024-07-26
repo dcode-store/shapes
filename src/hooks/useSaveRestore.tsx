@@ -46,12 +46,11 @@ export const useSaveRestore = (
                     const resource = await getFlowchartResource(resourceUri);
                     setFlowData(resource?.data);
                 } catch (error) {
-                    // console.log(error);
                     setPage(null);
                 }
             }
         }
         fetchPage();
-    }, [name]);
+    }, [name, loading]);
     return [flowData, loading, save]
 }

@@ -23,10 +23,18 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { slugify } from '../../helper/utils';
 import { SHAPES } from '../atom/shape';
 import { toSvg, toPng, toJpeg } from 'html-to-image';
+import EditableEdge from '../edges/editableEdge';
+import EdgeMenu from '../edges/edgeMenu';
 
 const nodeTypes = {
     shape: ShapeNode
 }
+
+const edgeTypes = {
+    editableEdge: EditableEdge
+}
+
+
 const getNodeId = (type: string) => `${type}:${Date.now().toString(36) + Math.random().toString(36)}`;
 const getDefaultColor = (type: string) => SHAPES[type].color;
 
@@ -44,14 +52,42 @@ const Shapes = ({ initialNodes = [], initialEdges = [] }) => {
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance<any, any> | null>(null);
 
+    const [contextMenu, setContextMenu] = useState(
+        { visible: false, position: { top: 0, left: 0 }, edge: null }
+    );
+
+
     const onConnect = useCallback(
         (params: any) => setEdges((els) => addEdge({
-            ...params, type: ConnectionLineType.SmoothStep, markerEnd: {
+            ...params, type: "editableEdge", markerEnd: {
                 type: MarkerType.ArrowClosed,
             }
         }, els)), [nodes],
     );
 
+    const onEdgeContextMenu = (event, edge) => {
+        event.preventDefault();
+
+        const menuWidth = 200;
+        const menuHeight = 200;
+        const { clientX, clientY } = event;
+
+        const reactFlowWrapperRect = document.getElementById('react-flow-wrapper').getBoundingClientRect();
+
+        const relativeX = clientX - reactFlowWrapperRect.left;
+        const relativeY = clientY - reactFlowWrapperRect.top;
+
+
+        setContextMenu({
+            visible: true,
+            position: {
+                left: relativeX + menuWidth > reactFlowWrapperRect.width ? relativeX - menuWidth : relativeX,
+                top: relativeY + menuHeight + 20 > reactFlowWrapperRect.height ? relativeY - menuHeight : relativeY + 20
+            },
+            edge: edge,
+        });
+    };
+    const onPaneClick = useCallback(() => setContextMenu({ ...contextMenu, visible: false }), [setContextMenu]);
 
     const onDragOver = useCallback((event: any) => {
         event.preventDefault();
@@ -125,8 +161,11 @@ const Shapes = ({ initialNodes = [], initialEdges = [] }) => {
 
     return (
         <>
-            <div className='mx-5 my-5'>
-                <h1 className="text-4xl font-bold text-center text-zinc-700 font-sans">Create Charts</h1>
+            <div className='flex justify-between items-center m-5'>
+                <h1 className="text-4xl font-bold text-zinc-700 font-space-grotesk">Create Charts</h1>
+                <a href="https://github.com/your-username/your-repository" target="_blank" className="text-blue-500 hover:underline">
+                    GitHub
+                </a>
             </div>
             <div className="rounded-lg dark:border-gray-700">
                 <ReactFlowProvider>
@@ -140,11 +179,14 @@ const Shapes = ({ initialNodes = [], initialEdges = [] }) => {
                             onInit={setReactFlowInstance}
                             onDrop={onDrop}
                             onDragOver={onDragOver}
-                            connectionLineType={ConnectionLineType.SmoothStep}
+                            connectionLineType={ConnectionLineType.Straight}
                             nodeTypes={nodeTypes}
+                            edgeTypes={edgeTypes}
                             connectionMode={ConnectionMode.Loose}
                             ref={flowRef}
                             proOptions={{ account: "paid-pro", hideAttribution: true }}
+                            onPaneClick={onPaneClick}
+                            onEdgeContextMenu={onEdgeContextMenu}
                             fitView
                         >
                             <MiniMap
@@ -169,6 +211,11 @@ const Shapes = ({ initialNodes = [], initialEdges = [] }) => {
                             <Panel position='top-left'>
                                 <Sidebar />
                             </Panel>
+                            {contextMenu.visible && <EdgeMenu
+                                position={contextMenu.position}
+                                edge={contextMenu.edge}
+                                onClose={() => setContextMenu({ ...contextMenu, visible: false })}
+                            />}
                         </ReactFlow>
                     </div>
                 </ReactFlowProvider>

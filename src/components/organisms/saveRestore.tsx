@@ -52,7 +52,7 @@ export const SaveRestore: React.FC<{ reactFlowInstance: ReactFlowInstance }> = (
                 const { x = 0, y = 0, zoom = 1 } = flowData.viewport;
                 reactFlowInstance.setNodes(flowData.nodes || []);
                 reactFlowInstance.setEdges(flowData.edges || []);
-                setViewport({ x, y, zoom: zoom || 0 });
+                // setViewport({ x, y, zoom: zoom || 0 });
             }
         }
         await restoreFlow();
@@ -64,7 +64,7 @@ export const SaveRestore: React.FC<{ reactFlowInstance: ReactFlowInstance }> = (
 
     useEffect(() => {
         onRestore();
-    }, []);
+    }, [flowData]);
 
     return (
         <div className='inline-flex rounded-lg shadow-sm'>

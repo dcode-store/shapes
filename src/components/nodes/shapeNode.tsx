@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { Handle, Position, NodeToolbar, NodeResizer, useReactFlow } from 'reactflow';
 import { SHAPES } from '../atom/shape';
 import './shapeNode.css';
+import { useDebouncedCallback } from 'use-debounce';
 
 const AvailableColors = [
     "transparent",
@@ -20,7 +21,11 @@ const ShapeNode = ({ id, data, selected, ...other }: { id: string, data: any, se
     let initHeight = other?.size?.height || data?.size?.height || 76;
     const { setNodes } = useReactFlow();
     const [label, setLabel] = useState(data.label || "");
-    const [size, setSize] = useState({ width: initWidth, height: initHeight });
+    const [size, setSize] = useState(
+        {
+            width: other?.style?.width || data?.size?.width || 76,
+            height: other?.style?.height || data?.size?.height || 76
+        });
     const [color, setColor] = useState(data?.color);
 
     useEffect(() => {
@@ -29,26 +34,34 @@ const ShapeNode = ({ id, data, selected, ...other }: { id: string, data: any, se
                 if (node.id === id) {
                     node.data.label = label;
                     node.data.color = color;
-                    node.data.size = { width: node.width, height: node.height };
                 }
                 return node;
             })
         );
     }, [label, color]);
 
-    useEffect(() => {
-        setSize({ width: initWidth, height: initHeight });
-    }, [initWidth, initHeight]);
-
 
     const changeColor = (chosenColor: string) => {
         setColor(chosenColor);
     };
 
-    const onResize = useCallback((event: any, payload) => {
+    const onResize = useDebouncedCallback((event: any, payload) => {
         const { width, height } = payload;
+        setNodes((nodes) => {
+            return nodes.map((node) => {
+                if (node.id === id) {
+                    node.data.size = { width, height };
+                }
+                return node;
+            });
+        })
         setSize({ width, height });
-    }, []);
+    }, 15);
+
+    const handleLabelChange = (event: any) => {
+        event.preventDefault();
+        setLabel(event.target.value)
+    }
 
     const Component = SHAPES[data?.type].component;
     return (
@@ -65,6 +78,7 @@ const ShapeNode = ({ id, data, selected, ...other }: { id: string, data: any, se
 
             <NodeResizer onResize={onResize} color={color} isVisible={selected} minWidth={10} minHeight={10} />
             <Component width={size.width} height={size.height} color={color} />
+
             {
                 [Position.Top, Position.Left, Position.Right, Position.Bottom].map(
                     (position) => (
@@ -72,7 +86,7 @@ const ShapeNode = ({ id, data, selected, ...other }: { id: string, data: any, se
                     )
                 )
             }
-            <input type="text" className={data?.type === "subflow" ? "node-label-subflow" : 'node-label'} value={label} placeholder={data?.type} onChange={(e) => setLabel(e.target.value)} />
+            <input type="text" className={data?.type === "subflow" ? "node-label-subflow" : 'node-label w-full'} value={label} placeholder={data?.type} onChange={handleLabelChange} />
         </>
     );
 }
